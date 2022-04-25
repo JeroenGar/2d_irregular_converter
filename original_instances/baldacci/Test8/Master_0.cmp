@@ -1,0 +1,42 @@
+Leather ID Leather0
+Barycentre 0 0
+Orientation 0
+Number of vertices 22
+186 0
+558 0
+744 186
+1117 186
+1303 0
+1675 0
+1861 186
+1861 558
+2047 744
+1861 930
+1861 1303
+1675 1489
+1303 1489
+1117 1303
+744 1303
+558 1489
+186 1489
+0 1303
+0 930
+186 744
+0 558
+0 186
+Number of defects 2
+Defect code Foro
+Defect type 2
+Number of vertices 4
+744 558
+1303 558
+1303 930
+744 930
+Defect code Foro
+Defect type 1
+Number of vertices 5
+558 372
+1117 744
+744 1117
+558 1117
+558 930
