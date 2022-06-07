@@ -1,5 +1,6 @@
 package general;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -34,5 +35,16 @@ public class Util {
             zipOut.write(bytes, 0, length);
         }
         fis.close();
+    }
+
+    public static Color qualityColorMapper(int quality){
+        switch (quality){
+            case 0: return Color.RED;
+            case 1: return Color.ORANGE;
+            case 2: return Color.YELLOW;
+            case 3: return Color.GREEN;
+            case 4: return Color.BLUE;
+            default: throw new RuntimeException("Unsupported quality: " + quality);
+        }
     }
 }
