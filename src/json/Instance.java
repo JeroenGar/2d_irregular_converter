@@ -26,25 +26,25 @@ public class Instance {
     public void setShapePaths(String folderName){
         for (int i = 0; i < items.size(); i++) {
             Item item = items.get(i);
-            item.shapePath = folderName + "/i_" + i + ".dxf";
+            item.dxfPath = folderName + "/i_" + i + ".dxf";
         }
         for (int i = 0; i < bins.size(); i++) {
             Bin bin = bins.get(i);
-            bin.shapePath = folderName + "/o_" + i + ".dxf";
+            bin.dxfPath = folderName + "/o_" + i + ".dxf";
         }
     }
 
     public void writeDXFs(File folder) throws IOException {
         for (Item item : items) {
             DXFDocument dxf = item.generateDXF();
-            File file = new File(folder, item.shapePath);
+            File file = new File(folder, item.dxfPath);
             FileWriter fw = new FileWriter(file);
             fw.write(dxf.toDXFString());
             fw.close();
         }
         for (Bin bin : bins) {
             DXFDocument dxf = bin.generateDXF();
-            File file = new File(folder, bin.shapePath);
+            File file = new File(folder, bin.dxfPath);
             FileWriter fw = new FileWriter(file);
             fw.write(dxf.toDXFString());
             fw.close();

@@ -1,9 +1,13 @@
-package baldacci;
+package json;
 
-import com.jsevy.jdxf.DXFDocument;
+import com.google.gson.*;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import com.google.gson.stream.JsonWriter;
 import com.jsevy.jdxf.DXFGraphics;
 
-import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -34,8 +38,20 @@ public class Shape {
 
     public void draw(DXFGraphics dxfGraphics){
         dxfGraphics.drawPolyline(
-                points.stream().mapToInt(p -> p.getX()).toArray(),
-                points.stream().mapToInt(p -> p.getY()).toArray(),
+                points.stream().mapToDouble(p -> p.getX()).toArray(),
+                points.stream().mapToDouble(p -> p.getY()).toArray(),
                 points.size());
     }
+
+
+    public static class Serializer implements JsonSerializer<Shape> {
+
+        @Override
+        public JsonElement serialize(Shape shape, Type type, JsonSerializationContext jsonSerializationContext) {
+            JsonElement jsonElement = jsonSerializationContext.serialize(shape.points);
+
+            return jsonElement;
+        }
+    }
+
 }

@@ -1,12 +1,13 @@
 package json;
 
-import baldacci.Shape;
 import com.google.gson.annotations.SerializedName;
 
 public class Zone {
     @SerializedName("Quality")
     public Integer quality;
-    transient Shape shape;
+
+    @SerializedName("Shape")
+    public Shape shape;
 
 
     public Zone(Integer quality, Shape shape) {
