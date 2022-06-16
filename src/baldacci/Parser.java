@@ -35,6 +35,7 @@ public class Parser {
 
                 if (optionalEqualShapeItem.isPresent()) {
                     optionalEqualShapeItem.get().demand += item.demand;
+                    optionalEqualShapeItem.get().demandMax += item.demandMax;
                 } else {
                     items.add(item);
                 }
