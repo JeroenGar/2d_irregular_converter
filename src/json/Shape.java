@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Shape {
-    List<Point> points;
+    public List<Point> points;
 
     public Shape(List<Point> points) {
         if (!points.get(points.size() - 1).equals(points.get(0))) {
@@ -38,8 +38,8 @@ public class Shape {
 
     public void draw(DXFGraphics dxfGraphics){
         dxfGraphics.drawPolyline(
-                points.stream().mapToDouble(p -> p.getX()).toArray(),
-                points.stream().mapToDouble(p -> p.getY()).toArray(),
+                points.stream().mapToDouble(p -> p.x).toArray(),
+                points.stream().mapToDouble(p -> p.y).toArray(),
                 points.size());
     }
 

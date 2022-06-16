@@ -1,18 +1,14 @@
 package baldacci;
 
-import baldacci.Parser;
 import general.Util;
 import json.Instance;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class BaldacciMain {
-
+    final static boolean CLEAN_SHAPES = true;
     public static void main(String[] args) throws Exception{
         File parentFolder = new File(args[0]);
         File outputFolder = new File(parentFolder.getAbsolutePath() + "_converted");

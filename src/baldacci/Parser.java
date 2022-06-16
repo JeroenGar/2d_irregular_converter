@@ -2,6 +2,7 @@ package baldacci;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import general.ShapeCleaner;
 import json.*;
 
 import java.io.*;
@@ -43,8 +44,7 @@ public class Parser {
             br.close();
             fr.close();
             return new Instance(name, items, bins);
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.err.println("Error parsing file: " + file.getAbsolutePath());
             throw e;
         }
@@ -70,7 +70,7 @@ public class Parser {
             }
             int numberOfDefects = Integer.parseInt(br.readLine().split(" ")[3]);
             Integer quality = null;
-            Map<String, Zone> defects = new HashMap<>(numberOfDefects);
+            Map<String, Zone> zones = new HashMap<>(numberOfDefects);
             for (int i = 0; i < numberOfDefects; i++) {
                 br.readLine(); //defect code
                 int defectQuality = Integer.parseInt(br.readLine().split(" ")[2]);
@@ -90,16 +90,26 @@ public class Parser {
                     }
                     defectShape = new Shape(defectPoints);
                     Zone zone = new Zone(defectQuality, defectShape);
-                    defects.put("zone " + i, zone);
+                    zones.put("zone " + i, zone);
                 }
             }
 
             br.close();
             fr.close();
 
-            return new Item(demand, demand, null, quality, defects, new Shape(points));
-        }
-        catch(Exception e){
+            if (BaldacciMain.CLEAN_SHAPES && !zones.isEmpty()){
+                ShapeCleaner cleaner = new ShapeCleaner();
+                Shape reference = new Shape(points);
+                for (Zone zone : zones.values()) {
+                    Shape cleanedShape = cleaner.cleanSharedVertices(zone.shape, reference);
+                    zone.shape = cleanedShape;
+                }
+            }
+
+
+
+            return new Item(demand, demand, null, quality, zones, new Shape(points));
+        } catch (Exception e) {
             System.err.println("Error parsing file: " + file.getAbsolutePath());
             throw e;
         }
@@ -145,8 +155,7 @@ public class Parser {
             fr.close();
 
             return bin;
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.err.println("Error parsing file: " + file.getAbsolutePath());
             throw e;
         }
@@ -162,8 +171,7 @@ public class Parser {
             FileWriter fw = new FileWriter(instanceFile);
             fw.write(gson.toJson(instance));
             fw.close();
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.err.println("Error writing instance: " + folder.getAbsolutePath());
             throw e;
         }
