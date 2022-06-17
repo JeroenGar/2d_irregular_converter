@@ -155,7 +155,7 @@ public class Parser {
                 ShapeCleaner cleaner = new ShapeCleaner();
                 shape = cleaner.clean(shape);
                 for (Map.Entry<String,Zone> entry : zones.entrySet()) {
-                    System.out.println("Cleaning zone " + entry.getKey());
+                    System.out.println("\tCleaning zone " + entry.getKey());
                     Zone zone = entry.getValue();
                     zone.shape = cleaner.clean(zone.shape);
                     zone.shape = cleaner.cleanSharedVertices(zone.shape, shape);

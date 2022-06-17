@@ -8,7 +8,6 @@ import java.util.*;
 
 public class ShapeCleaner {
     public static final int MAX_DISTANCE = 3;
-    //TODO: See Test 10 i_10.dxf
 
     public Shape clean(Shape shape) {
         Shape cleanedShape = cleanDuplicatePoints(shape);
@@ -43,7 +42,7 @@ public class ShapeCleaner {
                     Line line2 = lines.get(j);
                     if (Line.intersects(line1, line2)) {
                         //self intersection detected
-                        System.out.println("Self intersection detected");
+                        System.out.println("\t\tSelf intersection detected");
                         int startingIndex = line1.j;
                         int endingIndex = line2.i;
                         //all points between these two indices need to be flipped
@@ -87,10 +86,13 @@ public class ShapeCleaner {
                 falsePositives.add(index);
             }
         }
-        System.out.println("False positives: " + falsePositives.size());
+        if (falsePositives.size() > 0) {
+            System.out.println("\t\tFalse positives detected: " + falsePositives.size());
+        }
         pointsToBeReplaced.removeAll(falsePositives);
 
         int nSnappedVertices = 0;
+        int nNotSnappedBecauseTooFar = 0;
         int nRemovedDuplicates = 0;
         int nInjectedVertices = 0;
 
@@ -103,8 +105,15 @@ public class ShapeCleaner {
                 Point point = reference.points.stream().min(
                                 Comparator.comparingDouble(p -> Point.distance(p, originalPoint)))
                         .get();
-                cleanedPoints.add(point);
-                nSnappedVertices++;
+
+                if(Point.distance(originalPoint, point) < MAX_DISTANCE*10) {
+                    cleanedPoints.add(point);
+                    nSnappedVertices++;
+                }
+                else {
+                    cleanedPoints.add(originalPoint);
+                    nNotSnappedBecauseTooFar++;
+                }
             } else {
                 cleanedPoints.add(originalPoint);
             }
@@ -150,7 +159,9 @@ public class ShapeCleaner {
                 }
             }
         }
-        System.out.println("Snapped vertices: " + (nSnappedVertices - nRemovedDuplicates) + "\tInjected vertices: " + nInjectedVertices);
+        if (nSnappedVertices > 0) {
+            System.out.println("\t\tS: " + (nSnappedVertices - nRemovedDuplicates) + "\tF: " + nNotSnappedBecauseTooFar + "\tI: " + nInjectedVertices);
+        }
 
         return new Shape(cleanedPoints);
     }
