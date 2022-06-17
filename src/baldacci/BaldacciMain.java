@@ -8,7 +8,7 @@ import java.io.FileOutputStream;
 import java.util.zip.ZipOutputStream;
 
 public class BaldacciMain {
-    final static boolean CLEAN_SHAPES = true;
+    final static boolean CLEAN_SHAPES = false;
     public static void main(String[] args) throws Exception{
         File parentFolder = new File(args[0]);
         File outputFolder = new File(parentFolder.getAbsolutePath() + "_converted");
@@ -37,6 +37,7 @@ public class BaldacciMain {
             catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("Error processing folder " + folder.getName());
+                throw e;
             }
         }
     }

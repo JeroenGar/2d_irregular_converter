@@ -53,6 +53,7 @@ public class Parser {
     }
 
     private static Item parseItem(File file, int demand) throws IOException {
+        System.out.println("Parsing item " + file.getName());
         try {
             FileReader fr = new FileReader(file);
             BufferedReader br = new BufferedReader(fr);
@@ -97,18 +98,16 @@ public class Parser {
             br.close();
             fr.close();
 
-            if (BaldacciMain.CLEAN_SHAPES && !zones.isEmpty()){
+            Shape shape = new Shape(points);
+            if (BaldacciMain.CLEAN_SHAPES){
                 ShapeCleaner cleaner = new ShapeCleaner();
-                Shape reference = new Shape(points);
+                shape = cleaner.clean(shape);
                 for (Zone zone : zones.values()) {
-                    Shape cleanedShape = cleaner.cleanSharedVertices(zone.shape, reference);
-                    zone.shape = cleanedShape;
+                    zone.shape = cleaner.clean(zone.shape);
+                    zone.shape = cleaner.cleanSharedVertices(zone.shape, shape);
                 }
             }
-
-
-
-            return new Item(demand, demand, null, quality, zones, new Shape(points));
+            return new Item(demand, demand, null, quality, zones, shape);
         } catch (Exception e) {
             System.err.println("Error parsing file: " + file.getAbsolutePath());
             throw e;
@@ -117,6 +116,7 @@ public class Parser {
 
 
     private static Bin parseBin(File file) throws IOException {
+        System.out.println("Parsing bin: " + file.getName());
         try {
             FileReader fr = new FileReader(file);
             BufferedReader br = new BufferedReader(fr);
@@ -133,7 +133,7 @@ public class Parser {
                 points.add(new Point(x, y));
             }
             int numberOfDefects = Integer.parseInt(br.readLine().split(" ")[3]);
-            Map<String, Zone> defects = new HashMap<>(numberOfDefects);
+            Map<String, Zone> zones = new HashMap<>(numberOfDefects);
             for (int i = 0; i < numberOfDefects; i++) {
                 br.readLine();
                 int defectType = Integer.parseInt(br.readLine().split(" ")[2]);
@@ -147,9 +147,22 @@ public class Parser {
                 }
                 Shape defectShape = new Shape(defectPoints);
                 Zone zone = new Zone(defectType, defectShape);
-                defects.put("zone " + i, zone);
+                zones.put("zone " + i, zone);
             }
-            Bin bin = new Bin(null, null, defects, new Shape(points));
+
+            Shape shape = new Shape(points);
+            if (BaldacciMain.CLEAN_SHAPES){
+                ShapeCleaner cleaner = new ShapeCleaner();
+                shape = cleaner.clean(shape);
+                for (Map.Entry<String,Zone> entry : zones.entrySet()) {
+                    System.out.println("Cleaning zone " + entry.getKey());
+                    Zone zone = entry.getValue();
+                    zone.shape = cleaner.clean(zone.shape);
+                    zone.shape = cleaner.cleanSharedVertices(zone.shape, shape);
+                }
+            }
+
+            Bin bin = new Bin(null, null, zones, shape);
 
             br.close();
             fr.close();

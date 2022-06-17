@@ -5,15 +5,65 @@ import json.Shape;
 
 import java.awt.geom.Line2D;
 import java.util.*;
-import java.util.stream.IntStream;
 
 public class ShapeCleaner {
     public static final int MAX_DISTANCE = 3;
     //TODO: exactly map different zones on to each other if they are close enough together
     //TODO: resolve self intersections
 
+    public Shape clean(Shape shape) {
+        Shape cleanedShape = cleanDuplicatePoints(shape);
+        cleanedShape = cleanSelfIntersections(cleanedShape);
+
+        return cleanedShape;
+    }
+
+    public Shape cleanDuplicatePoints(Shape original) {
+        List<Point> points = new ArrayList<>(original.points);
+        int i = 0;
+        while (i < points.size() - 1) {
+            if (points.get(i).equals(points.get(i + 1))) {
+                points.remove(i);
+            } else {
+                i++;
+            }
+        }
+        return new Shape(points);
+    }
+
     public Shape cleanSelfIntersections(Shape original) {
-        return null;
+        List<Line> lines = Line.generateFromShape(original);
+
+        for (int i = 0; i < lines.size(); i++) {
+            for (int j = 0; j < lines.size(); j++) {
+                if (i == j || i == (j + 1) % lines.size() || (i+1) % lines.size() == j) {
+                    //same or adjacent lines
+                    continue;
+                } else {
+                    Line line1 = lines.get(i);
+                    Line line2 = lines.get(j);
+                    if (Line.intersects(line1, line2)) {
+                        //self intersection detected
+                        System.out.println("Self intersection detected");
+                        int startingIndex = line1.j;
+                        int endingIndex = line2.i;
+                        //all points between these two indices need to be flipped
+                        List<Point> fixedPoints = new ArrayList<>();
+                        for (int i1 = 0; i1 < original.points.size(); i1++) {
+                            int translatedIndex = -1;
+                            if (i1 >= startingIndex && i1 <= endingIndex) {
+                                translatedIndex = endingIndex - (i1 - startingIndex);
+                            } else {
+                                translatedIndex = i1;
+                            }
+                            fixedPoints.add(original.points.get(translatedIndex));
+                        }
+                        return cleanSelfIntersections(new Shape(fixedPoints));
+                    }
+                }
+            }
+        }
+        return original;
     }
 
     //Maps points close to the reference shape onto the reference shape
@@ -27,6 +77,11 @@ public class ShapeCleaner {
             if (referenceLines.stream().anyMatch(line -> line.distanceTo(point) < MAX_DISTANCE)) {
                 pointsToBeReplaced.add(i);
             }
+        }
+
+        for (Integer index : pointsToBeReplaced) {
+            if (index == 0)
+            original.points.set(index, reference.points.get(index));
         }
 
         int nSnappedVertices = 0;
@@ -59,13 +114,10 @@ public class ShapeCleaner {
                 i++;
             }
         }
-        if (cleanedPoints.get(cleanedPoints.size() - 1).equals(cleanedPoints.get(0))) {
-            cleanedPoints.remove(cleanedPoints.size() - 1);
-        }
 
         //Inject points from the reference shape if they are close enough
 
-        for(Point referencePoint : reference.points) {
+        for (Point referencePoint : reference.points) {
             List<Line> cleanedLines = Line.generateFromShape(new Shape(cleanedPoints));
             if (!cleanedPoints.contains(referencePoint)) {
                 if (cleanedLines.stream().anyMatch(line -> line.distanceTo(referencePoint) < MAX_DISTANCE)) {
@@ -146,8 +198,8 @@ public class ShapeCleaner {
 
         public static List<Line> generateFromShape(Shape shape) {
             List<Line> lines = new ArrayList<>();
-            for (int i = 0; i < shape.points.size(); i++) {
-                int j = (i + 1) % shape.points.size();
+            for (int i = 0; i < shape.points.size() - 1; i++) {
+                int j = i + 1;
                 Line line = new Line(shape.points.get(i), shape.points.get(j), i, j);
                 lines.add(line);
             }
