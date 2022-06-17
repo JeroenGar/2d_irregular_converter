@@ -367,10 +367,9 @@ Number of vertices 7
 2016 487
 Defect code AdisaDefect
 Defect type 0
-Number of vertices 12
+Number of vertices 11
 1893 503
 1910 513
-1935 506
 1935 506
 1933 510
 1918 525
@@ -625,8 +624,7 @@ Number of vertices 8
 1472 400
 Defect code AdisaDefect
 Defect type 0
-Number of vertices 7
-1478 403
+Number of vertices 6
 1478 403
 1475 402
 1474 401
@@ -750,7 +748,7 @@ Number of vertices 9
 1752 2340
 Defect code AdisaDefect
 Defect type 0
-Number of vertices 36
+Number of vertices 35
 1761 2497
 1765 2508
 1780 2547
@@ -769,7 +767,6 @@ Number of vertices 36
 1462 2498
 1434 2499
 1419 2478
-1340 2480
 1340 2480
 1343 2457
 1360 2425
@@ -1235,10 +1232,9 @@ Number of vertices 7
 459 1389
 Defect code AdisaDefect
 Defect type 0
-Number of vertices 16
+Number of vertices 15
 265 1570
 265 1572
-266 1573
 266 1573
 272 1574
 281 1578
