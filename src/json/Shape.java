@@ -21,14 +21,14 @@ public class Shape {
         if (!points.get(points.size() - 1).equals(points.get(0))) {
             points.add(points.get(0));
         }
-        for (int i = 0; i < points.size(); i++) {
+        /*for (int i = 0; i < points.size(); i++) {
             for (int j = 0; j < points.size(); j++) {
                 if (i == j || (i == 0 && j == points.size()-1) || (i == points.size()-1 && j == 0)) continue;
                 if(points.get(i).equals(points.get(j))){
                     throw new RuntimeException("Duplicate point detected: " + points.get(i));
                 }
             }
-        }
+        }*/
 
         this.points = points;
     }

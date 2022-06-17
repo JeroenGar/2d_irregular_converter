@@ -8,8 +8,7 @@ import java.util.*;
 
 public class ShapeCleaner {
     public static final int MAX_DISTANCE = 3;
-    //TODO: exactly map different zones on to each other if they are close enough together
-    //TODO: resolve self intersections
+    //TODO: See Test 10 i_10.dxf
 
     public Shape clean(Shape shape) {
         Shape cleanedShape = cleanDuplicatePoints(shape);
@@ -79,10 +78,17 @@ public class ShapeCleaner {
             }
         }
 
-        for (Integer index : pointsToBeReplaced) {
-            if (index == 0)
-            original.points.set(index, reference.points.get(index));
+        Set<Integer> falsePositives = new HashSet<>();
+        for (Integer index : pointsToBeReplaced){
+            int indexBefore = index - 1 % original.points.size();
+            int indexAfter = index + 1 % original.points.size();
+
+            if (!pointsToBeReplaced.contains(indexBefore) && !pointsToBeReplaced.contains(indexAfter)) {
+                falsePositives.add(index);
+            }
         }
+        System.out.println("False positives: " + falsePositives.size());
+        pointsToBeReplaced.removeAll(falsePositives);
 
         int nSnappedVertices = 0;
         int nRemovedDuplicates = 0;
