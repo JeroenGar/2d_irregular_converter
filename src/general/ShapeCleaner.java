@@ -22,32 +22,78 @@ public class ShapeCleaner {
         Set<Integer> pointsToBeReplaced = new HashSet<>();
         List<Line> referenceLines = Line.generateFromShape(reference);
 
-        boolean closeEnough = false;
-        Integer startingInterval = null;
-        Integer endingInterval = null;
-
         for (int i = 0; i < original.points.size(); i++) {
             Point point = original.points.get(i);
-            if (referenceLines.stream().anyMatch(line -> line.distanceTo(point) < MAX_DISTANCE)){
+            if (referenceLines.stream().anyMatch(line -> line.distanceTo(point) < MAX_DISTANCE)) {
                 pointsToBeReplaced.add(i);
             }
         }
 
+        int nSnappedVertices = 0;
+        int nRemovedDuplicates = 0;
+        int nInjectedVertices = 0;
+
         //Replace the vertices
-        List<Point> cleanedPoints = new ArrayList<>();
+        List<Point> cleanedPoints = new LinkedList<>();
 
         for (int i = 0; i < original.points.size(); i++) {
             Point originalPoint = original.points.get(i);
-            if(pointsToBeReplaced.contains(i)){
+            if (pointsToBeReplaced.contains(i)) {
                 Point point = reference.points.stream().min(
-                        (p1,p2) -> Double.compare(Point.distance(p1, originalPoint), Point.distance(p2, originalPoint)))
+                                Comparator.comparingDouble(p -> Point.distance(p, originalPoint)))
                         .get();
                 cleanedPoints.add(point);
-            }
-            else{
+                nSnappedVertices++;
+            } else {
                 cleanedPoints.add(originalPoint);
             }
         }
+
+        //Remove duplicates
+        int i = 0;
+        while (i < cleanedPoints.size() - 1) {
+            if (cleanedPoints.get(i).equals(cleanedPoints.get(i + 1))) {
+                cleanedPoints.remove(i);
+                nRemovedDuplicates++;
+            } else {
+                i++;
+            }
+        }
+        if (cleanedPoints.get(cleanedPoints.size() - 1).equals(cleanedPoints.get(0))) {
+            cleanedPoints.remove(cleanedPoints.size() - 1);
+        }
+
+        //Inject points from the reference shape if they are close enough
+
+        for(Point referencePoint : reference.points) {
+            List<Line> cleanedLines = Line.generateFromShape(new Shape(cleanedPoints));
+            if (!cleanedPoints.contains(referencePoint)) {
+                if (cleanedLines.stream().anyMatch(line -> line.distanceTo(referencePoint) < MAX_DISTANCE)) {
+                    //Point should be added to the cleanedPoints
+                    //Only question that remains now is where to insert it
+                    //Search for the 2 closest points
+                    Point closestPoint = cleanedPoints.stream().min(
+                                    Comparator.comparingDouble(p -> Point.distance(p, referencePoint)))
+                            .get();
+                    Point secondClosestPoint = cleanedPoints.stream().filter(p -> !p.equals(closestPoint))
+                            .min(Comparator.comparingDouble(p -> Point.distance(p, referencePoint)))
+                            .get();
+                    int indexOfClosestPoint = cleanedPoints.indexOf(closestPoint);
+                    int indexOfSecondClosestPoint = cleanedPoints.indexOf(secondClosestPoint);
+                    if (Math.abs(indexOfClosestPoint - indexOfSecondClosestPoint) == 1) {
+                        //Closest and second-closest point are adjacent, so we should inject the point
+                        cleanedPoints.add(Math.max(indexOfClosestPoint, indexOfSecondClosestPoint), referencePoint);
+                        nInjectedVertices++;
+                    } else if (Math.abs(indexOfClosestPoint - indexOfSecondClosestPoint) == reference.points.size() - 1) {
+                        //Closest and second-closest point are adjacent, so we should inject the point
+                        cleanedPoints.add(0, referencePoint);
+                        nInjectedVertices++;
+                    }
+                }
+            }
+        }
+        System.out.println("Snapped vertices: " + (nSnappedVertices - nRemovedDuplicates) + "\tInjected vertices: " + nInjectedVertices);
+
         return new Shape(cleanedPoints);
     }
 
