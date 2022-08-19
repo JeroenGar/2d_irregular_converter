@@ -1,9 +1,13 @@
 package json;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Objects;
 
 public class Point {
+    @SerializedName("X")
     public double x;
+    @SerializedName("Y")
     public double y;
 
     public Point(double x, double y) {

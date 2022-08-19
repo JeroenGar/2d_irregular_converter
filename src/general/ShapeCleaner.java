@@ -17,7 +17,7 @@ public class ShapeCleaner {
     }
 
     public Shape cleanDuplicatePoints(Shape original, String name) {
-        List<Point> points = new ArrayList<>(original.points);
+        List<Point> points = new ArrayList<>(original.outer_points);
         int i = 0;
         while (i < points.size() - 1) {
             if (points.get(i).equals(points.get(i + 1))) {
@@ -26,8 +26,8 @@ public class ShapeCleaner {
                 i++;
             }
         }
-        if (points.size() < original.points.size()){
-            System.out.println("\t\t" + name + " removed " + (original.points.size() - points.size()) + " duplicate points");
+        if (points.size() < original.outer_points.size()){
+            System.out.println("\t\t" + name + " removed " + (original.outer_points.size() - points.size()) + " duplicate points");
         }
 
         return new Shape(points);
@@ -51,14 +51,14 @@ public class ShapeCleaner {
                         int endingIndex = line2.i;
                         //all points between these two indices need to be flipped
                         List<Point> fixedPoints = new ArrayList<>();
-                        for (int i1 = 0; i1 < original.points.size(); i1++) {
+                        for (int i1 = 0; i1 < original.outer_points.size(); i1++) {
                             int translatedIndex = -1;
                             if (i1 >= startingIndex && i1 <= endingIndex) {
                                 translatedIndex = endingIndex - (i1 - startingIndex);
                             } else {
                                 translatedIndex = i1;
                             }
-                            fixedPoints.add(original.points.get(translatedIndex));
+                            fixedPoints.add(original.outer_points.get(translatedIndex));
                         }
                         return cleanSelfIntersections(new Shape(fixedPoints), name);
                     }
@@ -74,8 +74,8 @@ public class ShapeCleaner {
         Set<Integer> pointsToBeReplaced = new HashSet<>();
         List<Line> referenceLines = Line.generateFromShape(reference);
 
-        for (int i = 0; i < original.points.size(); i++) {
-            Point point = original.points.get(i);
+        for (int i = 0; i < original.outer_points.size(); i++) {
+            Point point = original.outer_points.get(i);
             if (referenceLines.stream().anyMatch(line -> line.distanceTo(point) < MAX_DISTANCE)) {
                 pointsToBeReplaced.add(i);
             }
@@ -83,8 +83,8 @@ public class ShapeCleaner {
 
         Set<Integer> falsePositives = new HashSet<>();
         for (Integer index : pointsToBeReplaced){
-            int indexBefore = index - 1 % original.points.size();
-            int indexAfter = index + 1 % original.points.size();
+            int indexBefore = index - 1 % original.outer_points.size();
+            int indexAfter = index + 1 % original.outer_points.size();
 
             if (!pointsToBeReplaced.contains(indexBefore) && !pointsToBeReplaced.contains(indexAfter)) {
                 falsePositives.add(index);
@@ -100,10 +100,10 @@ public class ShapeCleaner {
         //Replace the vertices
         List<Point> cleanedPoints = new LinkedList<>();
 
-        for (int i = 0; i < original.points.size(); i++) {
-            Point originalPoint = original.points.get(i);
+        for (int i = 0; i < original.outer_points.size(); i++) {
+            Point originalPoint = original.outer_points.get(i);
             if (pointsToBeReplaced.contains(i)) {
-                Point point = reference.points.stream().min(
+                Point point = reference.outer_points.stream().min(
                                 Comparator.comparingDouble(p -> Point.distance(p, originalPoint)))
                         .get();
 
@@ -133,7 +133,7 @@ public class ShapeCleaner {
 
         //Inject points from the reference shape if they are close enough
 
-        for (Point referencePoint : reference.points) {
+        for (Point referencePoint : reference.outer_points) {
             List<Line> cleanedLines = Line.generateFromShape(new Shape(cleanedPoints));
             if (!cleanedPoints.contains(referencePoint)) {
                 if (cleanedLines.stream().anyMatch(line -> line.distanceTo(referencePoint) < MAX_DISTANCE)) {
@@ -152,7 +152,7 @@ public class ShapeCleaner {
                         //Closest and second-closest point are adjacent, so we should inject the point
                         cleanedPoints.add(Math.max(indexOfClosestPoint, indexOfSecondClosestPoint), referencePoint);
                         nInjectedVertices++;
-                    } else if (Math.abs(indexOfClosestPoint - indexOfSecondClosestPoint) == reference.points.size() - 1) {
+                    } else if (Math.abs(indexOfClosestPoint - indexOfSecondClosestPoint) == reference.outer_points.size() - 1) {
                         //Closest and second-closest point are adjacent, so we should inject the point
                         cleanedPoints.add(0, referencePoint);
                         nInjectedVertices++;
@@ -217,9 +217,9 @@ public class ShapeCleaner {
 
         public static List<Line> generateFromShape(Shape shape) {
             List<Line> lines = new ArrayList<>();
-            for (int i = 0; i < shape.points.size() - 1; i++) {
+            for (int i = 0; i < shape.outer_points.size() - 1; i++) {
                 int j = i + 1;
-                Line line = new Line(shape.points.get(i), shape.points.get(j), i, j);
+                Line line = new Line(shape.outer_points.get(i), shape.outer_points.get(j), i, j);
                 lines.add(line);
             }
             return lines;
