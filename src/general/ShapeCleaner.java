@@ -9,14 +9,14 @@ import java.util.*;
 public class ShapeCleaner {
     public static final int MAX_DISTANCE = 3;
 
-    public Shape clean(Shape shape) {
-        Shape cleanedShape = cleanDuplicatePoints(shape);
-        cleanedShape = cleanSelfIntersections(cleanedShape);
+    public Shape clean(Shape shape, String name) {
+        Shape cleanedShape = cleanDuplicatePoints(shape, name);
+        cleanedShape = cleanSelfIntersections(cleanedShape, name);
 
         return cleanedShape;
     }
 
-    public Shape cleanDuplicatePoints(Shape original) {
+    public Shape cleanDuplicatePoints(Shape original, String name) {
         List<Point> points = new ArrayList<>(original.points);
         int i = 0;
         while (i < points.size() - 1) {
@@ -26,10 +26,14 @@ public class ShapeCleaner {
                 i++;
             }
         }
+        if (points.size() < original.points.size()){
+            System.out.println("\t\t" + name + " removed " + (original.points.size() - points.size()) + " duplicate points");
+        }
+
         return new Shape(points);
     }
 
-    public Shape cleanSelfIntersections(Shape original) {
+    public Shape cleanSelfIntersections(Shape original, String name) {
         List<Line> lines = Line.generateFromShape(original);
 
         for (int i = 0; i < lines.size(); i++) {
@@ -42,7 +46,7 @@ public class ShapeCleaner {
                     Line line2 = lines.get(j);
                     if (Line.intersects(line1, line2)) {
                         //self intersection detected
-                        System.out.println("\t\tSelf intersection detected");
+                        System.out.println("\t\t" + name + ": self intersection detected");
                         int startingIndex = line1.j;
                         int endingIndex = line2.i;
                         //all points between these two indices need to be flipped
@@ -56,7 +60,7 @@ public class ShapeCleaner {
                             }
                             fixedPoints.add(original.points.get(translatedIndex));
                         }
-                        return cleanSelfIntersections(new Shape(fixedPoints));
+                        return cleanSelfIntersections(new Shape(fixedPoints), name);
                     }
                 }
             }
@@ -65,7 +69,7 @@ public class ShapeCleaner {
     }
 
     //Maps points close to the reference shape onto the reference shape
-    public Shape cleanSharedVertices(Shape original, Shape reference) {
+    public Shape cleanSharedVertices(Shape original, Shape reference, String name) {
         //Find which vertices are close to the reference shape
         Set<Integer> pointsToBeReplaced = new HashSet<>();
         List<Line> referenceLines = Line.generateFromShape(reference);
@@ -85,9 +89,6 @@ public class ShapeCleaner {
             if (!pointsToBeReplaced.contains(indexBefore) && !pointsToBeReplaced.contains(indexAfter)) {
                 falsePositives.add(index);
             }
-        }
-        if (falsePositives.size() > 0) {
-            System.out.println("\t\tFalse positives detected: " + falsePositives.size());
         }
         pointsToBeReplaced.removeAll(falsePositives);
 
@@ -160,7 +161,8 @@ public class ShapeCleaner {
             }
         }
         if (nSnappedVertices > 0) {
-            System.out.println("\t\tS: " + (nSnappedVertices - nRemovedDuplicates) + "\tF: " + nNotSnappedBecauseTooFar + "\tI: " + nInjectedVertices);
+            System.out.println("\tCleaned " + name + ":");
+            System.out.println("\t\tSN: " + (nSnappedVertices - nRemovedDuplicates) + "\tTF: " + nNotSnappedBecauseTooFar + "\tIJ: " + nInjectedVertices + "\tFP:" + falsePositives.size());
         }
 
         return new Shape(cleanedPoints);

@@ -101,10 +101,12 @@ public class Parser {
             Shape shape = new Shape(points);
             if (BaldacciMain.CLEAN_SHAPES){
                 ShapeCleaner cleaner = new ShapeCleaner();
-                shape = cleaner.clean(shape);
-                for (Zone zone : zones.values()) {
-                    zone.shape = cleaner.clean(zone.shape);
-                    zone.shape = cleaner.cleanSharedVertices(zone.shape, shape);
+                shape = cleaner.clean(shape, file.getName());
+                for (Map.Entry<String, Zone> entry : zones.entrySet()) {
+                    Zone zone = entry.getValue();
+                    String name = entry.getKey();
+                    zone.shape = cleaner.clean(zone.shape, name);
+                    zone.shape = cleaner.cleanSharedVertices(zone.shape, shape, name);
                 }
             }
             return new Item(demand, demand, null, quality, zones, shape);
@@ -153,16 +155,16 @@ public class Parser {
             Shape shape = new Shape(points);
             if (BaldacciMain.CLEAN_SHAPES){
                 ShapeCleaner cleaner = new ShapeCleaner();
-                shape = cleaner.clean(shape);
+                shape = cleaner.clean(shape, file.getName());
                 for (Map.Entry<String,Zone> entry : zones.entrySet()) {
-                    System.out.println("\tCleaning zone " + entry.getKey());
                     Zone zone = entry.getValue();
-                    zone.shape = cleaner.clean(zone.shape);
-                    zone.shape = cleaner.cleanSharedVertices(zone.shape, shape);
+                    String name = entry.getKey();
+                    zone.shape = cleaner.clean(zone.shape, name);
+                    zone.shape = cleaner.cleanSharedVertices(zone.shape, shape, name);
                 }
             }
 
-            Bin bin = new Bin(null, null, zones, shape);
+            Bin bin = new Bin(1.0, 1, zones, shape);
 
             br.close();
             fr.close();

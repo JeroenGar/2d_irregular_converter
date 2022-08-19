@@ -32,8 +32,8 @@ public class ShapeCleanerMain {
         }.getType()));
 
         ShapeCleaner cleaner = new ShapeCleaner();
-        Shape cleanedShape1 = cleaner.cleanSharedVertices(originalShape1, referenceShape);
-        Shape cleanedShape2 = cleaner.cleanSharedVertices(originalShape2, referenceShape);
+        Shape cleanedShape1 = cleaner.cleanSharedVertices(originalShape1, referenceShape, "testShape1");
+        Shape cleanedShape2 = cleaner.cleanSharedVertices(originalShape2, referenceShape, "testShape2");
 
         writeFile(generateDXF(cleanedShape1), new File("cleanedShape1.dxf"));
         writeFile(generateDXF(cleanedShape2), new File("cleanedShape2.dxf"));
