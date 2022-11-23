@@ -5,7 +5,6 @@ import com.jsevy.jdxf.DXFDocument;
 import com.jsevy.jdxf.DXFGraphics;
 import general.Util;
 
-import java.awt.*;
 import java.util.Map;
 
 public class Item {
@@ -19,8 +18,8 @@ public class Item {
     @SerializedName("Dxf")
     public String dxfPath;
 
-    @SerializedName("Quality")
-    public Integer quality;
+    @SerializedName("BaseQuality")
+    public Integer baseQuality;
 
     @SerializedName("Zones")
     public Map<String, Zone> zones;
@@ -28,11 +27,11 @@ public class Item {
     @SerializedName("Shape")
     public Shape shape;
 
-    public Item(Integer demand, Integer demandMax, Integer value, Integer quality, Map<String, Zone> zones, Shape shape) {
+    public Item(Integer demand, Integer demandMax, Integer value, Integer baseQuality, Map<String, Zone> zones, Shape shape) {
         this.demand = demand;
         this.demandMax = demandMax;
         this.value = value;
-        this.quality = quality;
+        this.baseQuality = baseQuality;
         this.shape = shape;
         this.zones = zones;
     }
@@ -42,8 +41,8 @@ public class Item {
         DXFDocument dxfDocument = new DXFDocument();
         DXFGraphics dxfGraphics = dxfDocument.getGraphics();
 
-        if (this.quality != null){
-            dxfGraphics.setColor(Util.qualityColorMapper(this.quality));
+        if (this.baseQuality != null){
+            dxfGraphics.setColor(Util.qualityColorMapper(this.baseQuality));
         }
         shape.draw(dxfGraphics);
 

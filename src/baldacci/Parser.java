@@ -9,7 +9,9 @@ import java.io.*;
 import java.util.*;
 
 public class Parser {
-    static Gson gson = new GsonBuilder().registerTypeAdapter(Shape.class, new Shape.Serializer()).create();
+    static Gson gson = new GsonBuilder()
+            .registerTypeAdapter(Shape.class, new Shape.Serializer())
+            .create();
 
     public static Instance parseInstance(File file) throws IOException {
         try {
