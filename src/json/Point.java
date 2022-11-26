@@ -1,7 +1,9 @@
 package json;
 
+import com.google.gson.*;
 import com.google.gson.annotations.SerializedName;
 
+import java.lang.reflect.Type;
 import java.util.Objects;
 
 public class Point {
@@ -35,5 +37,17 @@ public class Point {
     @Override
     public String toString() {
         return "(" + x + "," + y + ")";
+    }
+
+    public static class Serializer implements JsonSerializer<Point> {
+        @Override
+        public JsonElement serialize(Point point, Type type, JsonSerializationContext jsonSerializationContext) {
+
+            JsonArray jsonArray = new JsonArray();
+            jsonArray.add(point.x);
+            jsonArray.add(point.y);
+
+            return jsonArray;
+        }
     }
 }
