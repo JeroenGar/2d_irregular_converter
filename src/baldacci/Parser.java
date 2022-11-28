@@ -189,7 +189,7 @@ public class Parser {
 
     public static void writeInstance(Instance instance, File folder) throws IOException {
         try {
-            File instanceFile = new File(folder.getAbsolutePath() + "/instance.json");
+            File instanceFile = new File(folder.getAbsolutePath() + "/" + instance.name  + ".json");
             File dxfDirectory = new File(folder.getAbsolutePath() + "/dxf");
             dxfDirectory.mkdir();
             instance.setShapePaths(dxfDirectory.getName());
