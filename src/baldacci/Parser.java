@@ -65,7 +65,7 @@ public class Parser {
             br.readLine();
 
             int numberOfVertices = Integer.parseInt(br.readLine().split(" ")[3]);
-            List<Point> points = new ArrayList<>();
+            ArrayList<Point> points = new ArrayList<>();
             for (int i = 0; i < numberOfVertices; i++) {
                 String[] coords = br.readLine().split(" ");
                 int x = Integer.parseInt(coords[0]);
@@ -85,7 +85,7 @@ public class Parser {
                     quality = defectQuality;
                 } else {
                     int numberOfDefectVertices = Integer.parseInt(geometryOrNVerticesLine.split(" ")[3]);
-                    List<Point> defectPoints = new ArrayList<>();
+                    ArrayList<Point> defectPoints = new ArrayList<>();
                     for (int j = 0; j < numberOfDefectVertices; j++) {
                         String[] coords = br.readLine().split(" ");
                         int x = Integer.parseInt(coords[0]);
@@ -109,7 +109,7 @@ public class Parser {
                     Zone zone = entry.getValue();
                     String name = entry.getKey();
                     zone.shape = cleaner.clean(zone.shape, name);
-                    zone.shape = cleaner.cleanSharedVertices(zone.shape, shape, name);
+                    zone.shape.outer_points = cleaner.cleanSharedVertices(zone.shape.outer_points, shape.outer_points, name);
                 }
             }
             return new Item(demand, demand, null, quality, zones, shape);
@@ -130,12 +130,13 @@ public class Parser {
             br.readLine();
 
             int numberOfVertices = Integer.parseInt(br.readLine().split(" ")[3]);
-            List<Point> points = new ArrayList<>();
+            ArrayList<Point> outer_points = new ArrayList<>();
+            ArrayList<ArrayList<Point>> inner_points = new ArrayList<>();
             for (int i = 0; i < numberOfVertices; i++) {
                 String[] coords = br.readLine().split(" ");
                 int x = Integer.parseInt(coords[0]);
                 int y = Integer.parseInt(coords[1]);
-                points.add(new Point(x, y));
+                outer_points.add(new Point(x, y));
             }
             int numberOfDefects = Integer.parseInt(br.readLine().split(" ")[3]);
             Map<String, Zone> zones = new HashMap<>(numberOfDefects);
@@ -143,19 +144,26 @@ public class Parser {
                 br.readLine();
                 int defectType = Integer.parseInt(br.readLine().split(" ")[2]);
                 int numberOfDefectVertices = Integer.parseInt(br.readLine().split(" ")[3]);
-                List<Point> defectPoints = new ArrayList<>();
+                ArrayList<Point> defectPoints = new ArrayList<>();
                 for (int j = 0; j < numberOfDefectVertices; j++) {
                     String[] coords = br.readLine().split(" ");
                     int x = Integer.parseInt(coords[0]);
                     int y = Integer.parseInt(coords[1]);
                     defectPoints.add(new Point(x, y));
                 }
-                Shape defectShape = new Shape(defectPoints);
-                Zone zone = new Zone(defectType, defectShape);
-                zones.put("zone " + i, zone);
+                if (defectType == 0) {
+                    //Hole in the bin
+                    inner_points.add(defectPoints);
+                }
+                else {
+                    //Quality zone
+                    Shape defectShape = new Shape(defectPoints);
+                    Zone zone = new Zone(defectType, defectShape);
+                    zones.put("zone " + i, zone);
+                }
             }
 
-            Shape shape = new Shape(points);
+            Shape shape = new Shape(outer_points, inner_points);
             if (BaldacciMain.CLEAN_SHAPES){
                 ShapeCleaner cleaner = new ShapeCleaner();
                 shape = cleaner.clean(shape, file.getName());
@@ -163,7 +171,7 @@ public class Parser {
                     Zone zone = entry.getValue();
                     String name = entry.getKey();
                     zone.shape = cleaner.clean(zone.shape, name);
-                    zone.shape = cleaner.cleanSharedVertices(zone.shape, shape, name);
+                    zone.shape.outer_points = cleaner.cleanSharedVertices(zone.shape.outer_points, shape.outer_points, name);
                 }
             }
 

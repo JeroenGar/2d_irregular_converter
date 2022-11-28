@@ -15,28 +15,24 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 public class Shape {
-    public List<Point> outer_points;
-    public List<List<Point>> inner_points;
+    public ArrayList<Point> outer_points;
+    public ArrayList<ArrayList<Point>> inner_points;
 
-    public Shape(List<Point> outer_points) {
+    public Shape(ArrayList<Point> outer_points) {
+        this(outer_points, new ArrayList<>());
+    }
+
+    public Shape(ArrayList<Point> outer_points, ArrayList<ArrayList<Point>> inner_points){
+        if (outer_points == null) {
+            throw new NullPointerException("outer_points");
+        }
+
         if (!outer_points.get(outer_points.size() - 1).equals(outer_points.get(0))) {
             outer_points.add(outer_points.get(0));
         }
-        /*for (int i = 0; i < points.size(); i++) {
-            for (int j = 0; j < points.size(); j++) {
-                if (i == j || (i == 0 && j == points.size()-1) || (i == points.size()-1 && j == 0)) continue;
-                if(points.get(i).equals(points.get(j))){
-                    throw new RuntimeException("Duplicate point detected: " + points.get(i));
-                }
-            }
-        }*/
 
         this.outer_points = outer_points;
-        this.inner_points = new ArrayList<>();
-    }
-
-    public Shape(List<Point> outer_points, List<List<Point>> inner_points){
-        throw new UnsupportedOperationException("Not implemented yet");
+        this.inner_points = inner_points;
     }
 
     @Override

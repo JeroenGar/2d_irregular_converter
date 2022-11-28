@@ -12,6 +12,7 @@ import json.Zone;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,8 +33,11 @@ public class ShapeCleanerMain {
         }.getType()));
 
         ShapeCleaner cleaner = new ShapeCleaner();
-        Shape cleanedShape1 = cleaner.cleanSharedVertices(originalShape1, referenceShape, "testShape1");
-        Shape cleanedShape2 = cleaner.cleanSharedVertices(originalShape2, referenceShape, "testShape2");
+        ArrayList<Point> cleanedPoints1 = cleaner.cleanSharedVertices(originalShape1.outer_points, referenceShape.outer_points, "testShape1");
+        ArrayList<Point> cleanedPoints2 = cleaner.cleanSharedVertices(originalShape2.outer_points, referenceShape.outer_points, "testShape2");
+
+        Shape cleanedShape1 = new Shape(cleanedPoints1);
+        Shape cleanedShape2 = new Shape(cleanedPoints2);
 
         writeFile(generateDXF(cleanedShape1), new File("cleanedShape1.dxf"));
         writeFile(generateDXF(cleanedShape2), new File("cleanedShape2.dxf"));
