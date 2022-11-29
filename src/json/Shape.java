@@ -31,6 +31,12 @@ public class Shape {
             outer_points.add(outer_points.get(0));
         }
 
+        for (ArrayList<Point> inner : inner_points) {
+            if (!inner.get(inner.size() - 1).equals(inner.get(0))) {
+                inner.add(inner.get(0));
+            }
+        }
+
         this.outer_points = outer_points;
         this.inner_points = inner_points;
     }
