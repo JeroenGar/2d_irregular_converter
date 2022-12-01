@@ -1,8 +1,14 @@
 package general;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import json.Instance;
+import json.Point;
+
 import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -45,6 +51,27 @@ public class Util {
             case 3: return Color.GREEN;
             case 4: return Color.BLUE;
             default: throw new RuntimeException("Unsupported quality: " + quality);
+        }
+    }
+
+    public static Gson gson = new GsonBuilder()
+                .registerTypeAdapter(json.Shape.class, new json.Shape.Serializer())
+                .registerTypeAdapter(json.Point.class, new Point.Serializer())
+                .create();
+
+    public static void writeInstance(Instance instance, File folder) throws IOException {
+        try {
+            File instanceFile = new File(folder.getAbsolutePath() + "/" + instance.name  + ".json");
+            File dxfDirectory = new File(folder.getAbsolutePath() + "/dxf");
+            dxfDirectory.mkdir();
+            instance.setShapePaths(dxfDirectory.getName());
+            instance.writeDXFs(folder);
+            FileWriter fw = new FileWriter(instanceFile);
+            fw.write(gson.toJson(instance));
+            fw.close();
+        } catch (Exception e) {
+            System.err.println("Error writing instance: " + folder.getAbsolutePath());
+            throw e;
         }
     }
 }

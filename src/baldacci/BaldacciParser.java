@@ -8,12 +8,7 @@ import json.*;
 import java.io.*;
 import java.util.*;
 
-public class Parser {
-    static Gson gson = new GsonBuilder()
-            .registerTypeAdapter(Shape.class, new Shape.Serializer())
-            .registerTypeAdapter(Point.class, new Point.Serializer())
-            .create();
-
+public class BaldacciParser {
     public static Instance parseInstance(File file) throws IOException {
         try {
             FileReader fr = new FileReader(file.getAbsolutePath() + "/problem.dat");
@@ -112,7 +107,7 @@ public class Parser {
                     zone.shape.outer_points = cleaner.cleanSharedVertices(zone.shape.outer_points, shape.outer_points, name);
                 }
             }
-            return new Item(demand, demand, null, quality, zones, shape);
+            return new Item(demand, demand, null, quality, null, zones, shape);
         } catch (Exception e) {
             System.err.println("Error parsing file: " + file.getAbsolutePath());
             throw e;
@@ -183,22 +178,6 @@ public class Parser {
             return bin;
         } catch (Exception e) {
             System.err.println("Error parsing file: " + file.getAbsolutePath());
-            throw e;
-        }
-    }
-
-    public static void writeInstance(Instance instance, File folder) throws IOException {
-        try {
-            File instanceFile = new File(folder.getAbsolutePath() + "/" + instance.name  + ".json");
-            File dxfDirectory = new File(folder.getAbsolutePath() + "/dxf");
-            dxfDirectory.mkdir();
-            instance.setShapePaths(dxfDirectory.getName());
-            instance.writeDXFs(folder);
-            FileWriter fw = new FileWriter(instanceFile);
-            fw.write(gson.toJson(instance));
-            fw.close();
-        } catch (Exception e) {
-            System.err.println("Error writing instance: " + folder.getAbsolutePath());
             throw e;
         }
     }

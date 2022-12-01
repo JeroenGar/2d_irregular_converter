@@ -17,10 +17,10 @@ public class BaldacciMain {
             try {
                 if (folder.isDirectory()) {
                     System.out.println("Processing folder " + folder.getName());
-                    Instance instance = Parser.parseInstance(folder);
+                    Instance instance = BaldacciParser.parseInstance(folder);
                     File convertedFolder = new File(parentFolder.getAbsolutePath() + "_converted/" + folder.getName());
                     convertedFolder.mkdir();
-                    Parser.writeInstance(instance, convertedFolder);
+                    Util.writeInstance(instance, convertedFolder);
 
                     //create zip archive
                     FileOutputStream fos = new FileOutputStream(convertedFolder.getAbsolutePath() + ".zip");
