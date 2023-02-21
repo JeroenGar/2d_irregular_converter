@@ -1,10 +1,6 @@
-package swim;
+package shirts;
 
-import json.Bin;
-import json.Item;
-import json.Instance;
-import json.Point;
-import json.Shape;
+import json.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,17 +11,18 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class SwimParser {
+public class ShirtsParser {
     static List<Double> allowedOrientations = Arrays.asList(0.0, 180.0);
+
     public static Instance parseInstance(File file) throws IOException {
         FileReader fr = new FileReader(file);
         BufferedReader br = new BufferedReader(fr);
 
-        String name = "swim";
+        String name = "shirts";
         List<Bin> bins = new ArrayList<>();
 
-        int height = 5752;
-        int width = 5800;
+        int height = 40;
+        int width = 63;
 
         Bin bin = createBin(height, width);
         bins.add(bin);
