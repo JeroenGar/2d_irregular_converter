@@ -1,4 +1,4 @@
-package mao;
+package trousers;
 
 import json.*;
 import org.w3c.dom.Document;
@@ -12,17 +12,16 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.rmi.server.SkeletonNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class MaoParser {
+public class TrousersParser {
 
 
-    static List<Double> allowedOrientations = Arrays.asList(0.0, 90.0, 180.0, 270.0);
-    static Double stripHeight = 2550.0;
+    static List<Double> allowedOrientations = Arrays.asList(0.0, 180.0);
+    static Double stripHeight = 79.0;
 
     public static Instance parseInstance(File file) throws IOException, ParserConfigurationException, SAXException {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -31,7 +30,7 @@ public class MaoParser {
         Document doc = dBuilder.parse(file);
         doc.getDocumentElement().normalize();
 
-        String name = "mao";
+        String name = "trousers";
 
         NodeList lotList = doc.getElementsByTagName("lot");
 

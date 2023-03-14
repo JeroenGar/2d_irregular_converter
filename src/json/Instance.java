@@ -16,6 +16,8 @@ public class Instance {
     @SerializedName("Objects")
     public List<Bin> bins;
 
+    @SerializedName("StripHeight")
+    public Double stripHeight = null;
 
     public Instance(String name, List<Item> items, List<Bin> bins) {
         this.name = name;
@@ -23,14 +25,22 @@ public class Instance {
         this.bins = bins;
     }
 
+    public Instance(String name, List<Item> items, Double stripHeight) {
+        this.name = name;
+        this.items = items;
+        this.stripHeight = stripHeight;
+    }
+
     public void setShapePaths(String folderName){
         for (int i = 0; i < items.size(); i++) {
             Item item = items.get(i);
             item.dxfPath = folderName + "/i_" + i + ".dxf";
         }
-        for (int i = 0; i < bins.size(); i++) {
-            Bin bin = bins.get(i);
-            bin.dxfPath = folderName + "/o_" + i + ".dxf";
+        if (bins != null){
+            for (int i = 0; i < bins.size(); i++) {
+                Bin bin = bins.get(i);
+                bin.dxfPath = folderName + "/o_" + i + ".dxf";
+            }
         }
     }
 
@@ -42,14 +52,15 @@ public class Instance {
             fw.write(dxf.toDXFString());
             fw.close();
         }
-        for (Bin bin : bins) {
-            DXFDocument dxf = bin.generateDXF();
-            File file = new File(folder, bin.dxfPath);
-            FileWriter fw = new FileWriter(file);
-            fw.write(dxf.toDXFString());
-            fw.close();
+        if (bins != null) {
+            for (Bin bin : bins) {
+                DXFDocument dxf = bin.generateDXF();
+                File file = new File(folder, bin.dxfPath);
+                FileWriter fw = new FileWriter(file);
+                fw.write(dxf.toDXFString());
+                fw.close();
+            }
         }
-
     }
 
 
