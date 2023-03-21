@@ -78,6 +78,7 @@ public class MaoParser {
                 }
             }
         }
-        return new Instance(name, items, stripHeight);
+        Strip strip = new Strip(stripHeight);
+        return new Instance(name, items, strip);
     }
 }

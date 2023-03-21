@@ -1,10 +1,6 @@
 package swim;
 
-import json.Bin;
-import json.Item;
-import json.Instance;
-import json.Point;
-import json.Shape;
+import json.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -50,7 +46,7 @@ public class SwimParser {
 
             br.readLine();
         }
-
-        return new Instance(name, items, stripHeight);
+        Strip strip = new Strip(stripHeight);
+        return new Instance(name, items, strip);
     }
 }

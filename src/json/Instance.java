@@ -16,8 +16,8 @@ public class Instance {
     @SerializedName("Objects")
     public List<Bin> bins;
 
-    @SerializedName("StripHeight")
-    public Double stripHeight = null;
+    @SerializedName("Strip")
+    public Strip strip = null;
 
     public Instance(String name, List<Item> items, List<Bin> bins) {
         this.name = name;
@@ -25,10 +25,10 @@ public class Instance {
         this.bins = bins;
     }
 
-    public Instance(String name, List<Item> items, Double stripHeight) {
+    public Instance(String name, List<Item> items, Strip strip) {
         this.name = name;
         this.items = items;
-        this.stripHeight = stripHeight;
+        this.strip = strip;
     }
 
     public void setShapePaths(String folderName){
