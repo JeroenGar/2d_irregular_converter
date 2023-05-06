@@ -88,8 +88,17 @@ public class BaldacciParser {
                         defectPoints.add(new Point(x, y));
                     }
                     defectShape = new Shape(defectPoints);
-                    Zone zone = new Zone(defectQuality, defectShape);
-                    zones.put("zone " + i, zone);
+                    if (defectShape.equals(new Shape(points))) {
+                        //Quality zone matches the entire shape
+                        if (quality == null || defectQuality < quality) {
+                            System.out.println("Quality zone matches the entire shape");
+                            quality = defectQuality;
+                        }
+                    }
+                    else {
+                        Zone zone = new Zone(defectQuality, defectShape);
+                        zones.put("zone " + i, zone);
+                    }
                 }
             }
 
