@@ -175,12 +175,6 @@ public class ShapeCleaner {
         return cleanedPoints;
     }
 
-    //Combines pairs of edge pairs in a straight line
-    public Shape cleanStraightEdgePairs(Shape original) {
-        return null;
-    }
-
-
     private static class Interval {
         public int start;
         public int end;

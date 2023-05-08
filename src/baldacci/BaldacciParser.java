@@ -175,7 +175,7 @@ public class BaldacciParser {
                     Zone zone = entry.getValue();
                     String name = entry.getKey();
                     zone.shape = cleaner.clean(zone.shape, name);
-                    zone.shape.outer_points = cleaner.cleanSharedVertices(zone.shape.outer_points, shape.outer_points, name);
+                    //zone.shape.outer_points = cleaner.cleanSharedVertices(zone.shape.outer_points, shape.outer_points, name);
                 }
             }
 
