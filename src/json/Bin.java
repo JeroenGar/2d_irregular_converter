@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class Bin {
     @SerializedName("Cost")
-    public Double cost;
+    public Integer cost;
     @SerializedName("Stock")
     public Integer stock;
     @SerializedName("Dxf")
@@ -23,7 +23,7 @@ public class Bin {
     public Shape shape;
 
 
-    public Bin(Double cost, Integer stock, Map<String, Zone> zones, Shape shape) {
+    public Bin(Integer cost, Integer stock, Map<String, Zone> zones, Shape shape) {
         this.cost = cost;
         this.stock = stock;
         this.zones = zones;

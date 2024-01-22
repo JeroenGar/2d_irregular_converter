@@ -179,7 +179,7 @@ public class BaldacciParser {
                 }
             }
 
-            Bin bin = new Bin(1.0, 1, zones, shape);
+            Bin bin = new Bin(1, 1, zones, shape);
 
             br.close();
             fr.close();
