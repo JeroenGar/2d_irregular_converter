@@ -69,7 +69,7 @@ public class BaldacciParser {
             }
             int numberOfDefects = Integer.parseInt(br.readLine().split(" ")[3]);
             Integer quality = null;
-            Map<String, Zone> zones = new HashMap<>(numberOfDefects);
+            ArrayList<Zone> zones = new ArrayList<>();
             for (int i = 0; i < numberOfDefects; i++) {
                 br.readLine(); //defect code
                 int defectQuality = Integer.parseInt(br.readLine().split(" ")[2]);
@@ -97,7 +97,7 @@ public class BaldacciParser {
                     }
                     else {
                         Zone zone = new Zone(defectQuality, defectShape);
-                        zones.put("zone " + i, zone);
+                        zones.add(zone);
                     }
                 }
             }
@@ -109,11 +109,12 @@ public class BaldacciParser {
             if (BaldacciMain.CLEAN_SHAPES){
                 ShapeCleaner cleaner = new ShapeCleaner();
                 shape = cleaner.clean(shape, file.getName());
-                for (Map.Entry<String, Zone> entry : zones.entrySet()) {
-                    Zone zone = entry.getValue();
-                    String name = entry.getKey();
+                int i = 0;
+                for (Zone zone : zones) {
+                    String name = "zone_" + i + "_q" + zone.quality;
                     zone.shape = cleaner.clean(zone.shape, name);
                     zone.shape.outer_points = cleaner.cleanSharedVertices(zone.shape.outer_points, shape.outer_points, name);
+                    i++;
                 }
             }
             return new Item(demand, demand, null, quality, null, zones, shape);
@@ -143,7 +144,7 @@ public class BaldacciParser {
                 outer_points.add(new Point(x, y));
             }
             int numberOfDefects = Integer.parseInt(br.readLine().split(" ")[3]);
-            Map<String, Zone> zones = new HashMap<>(numberOfDefects);
+            ArrayList<Zone> zones = new ArrayList<>();
             for (int i = 0; i < numberOfDefects; i++) {
                 br.readLine();
                 int defectType = Integer.parseInt(br.readLine().split(" ")[2]);
@@ -163,7 +164,7 @@ public class BaldacciParser {
                     //Quality zone
                     Shape defectShape = new Shape(defectPoints);
                     Zone zone = new Zone(defectType, defectShape);
-                    zones.put("zone " + i, zone);
+                    zones.add(zone);
                 }
             }
 
@@ -171,11 +172,12 @@ public class BaldacciParser {
             if (BaldacciMain.CLEAN_SHAPES){
                 ShapeCleaner cleaner = new ShapeCleaner();
                 shape = cleaner.clean(shape, file.getName());
-                for (Map.Entry<String,Zone> entry : zones.entrySet()) {
-                    Zone zone = entry.getValue();
-                    String name = entry.getKey();
+                int i = 0;
+                for (Zone zone : zones) {
+                    String name = "zone_" + i + "_q" + zone.quality;
                     zone.shape = cleaner.clean(zone.shape, name);
                     //zone.shape.outer_points = cleaner.cleanSharedVertices(zone.shape.outer_points, shape.outer_points, name);
+                    i++;
                 }
             }
 

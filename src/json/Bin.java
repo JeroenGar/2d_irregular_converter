@@ -5,8 +5,7 @@ import com.jsevy.jdxf.DXFDocument;
 import com.jsevy.jdxf.DXFGraphics;
 import general.Util;
 
-import java.awt.*;
-import java.util.Map;
+import java.util.List;
 
 public class Bin {
     @SerializedName("Cost")
@@ -17,13 +16,13 @@ public class Bin {
     public String dxfPath;
 
     @SerializedName("Zones")
-    public Map<String, Zone> zones;
+    public List<Zone> zones;
 
     @SerializedName("Shape")
     public Shape shape;
 
 
-    public Bin(Integer cost, Integer stock, Map<String, Zone> zones, Shape shape) {
+    public Bin(Integer cost, Integer stock, List<Zone> zones, Shape shape) {
         this.cost = cost;
         this.stock = stock;
         this.zones = zones;
@@ -36,13 +35,14 @@ public class Bin {
 
         shape.draw(dxfGraphics);
 
-        for (Map.Entry<String, Zone> entry : zones.entrySet()) {
-            Zone zone = entry.getValue();
-            String name = entry.getKey();
+        int i = 0;
+        for (Zone zone : zones) {
+            String name = "zone_" + i + "_q" + zone.quality;
 
             dxfGraphics.setColor(Util.qualityColorMapper(zone.quality));
             dxfDocument.setLayer(name);
             zone.shape.draw(dxfGraphics);
+            i++;
         }
 
         return dxfDocument;

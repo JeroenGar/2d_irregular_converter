@@ -9,7 +9,6 @@ public class Zone {
     @SerializedName("Shape")
     public Shape shape;
 
-
     public Zone(Integer quality, Shape shape) {
         this.quality = quality;
         this.shape = shape;

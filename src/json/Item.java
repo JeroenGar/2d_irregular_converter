@@ -5,6 +5,7 @@ import com.jsevy.jdxf.DXFDocument;
 import com.jsevy.jdxf.DXFGraphics;
 import general.Util;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,16 +24,15 @@ public class Item {
     public Integer baseQuality;
 
     @SerializedName("AllowedOrientations")
-
     public List<Double> allowedOrientations;
 
     @SerializedName("Zones")
-    public Map<String, Zone> zones;
+    public List<Zone> zones;
 
     @SerializedName("Shape")
     public Shape shape;
 
-    public Item(Integer demand, Integer demandMax, Integer value, Integer baseQuality, List<Double> allowedOrientations, Map<String, Zone> zones, Shape shape) {
+    public Item(Integer demand, Integer demandMax, Integer value, Integer baseQuality, List<Double> allowedOrientations, List<Zone> zones, Shape shape) {
         this.demand = demand;
         this.demandMax = demandMax;
         this.value = value;
@@ -53,13 +53,14 @@ public class Item {
         shape.draw(dxfGraphics);
 
         if (zones != null) {
-            for (Map.Entry<String, Zone> entry : zones.entrySet()) {
-                Zone zone = entry.getValue();
-                String name = entry.getKey();
+            int i = 0;
+            for (Zone zone : zones) {
+                String name = "zone_" + i + "_q" + zone.quality;
 
                 dxfGraphics.setColor(Util.qualityColorMapper(zone.quality));
                 dxfDocument.setLayer(name);
                 zone.shape.draw(dxfGraphics);
+                i++;
             }
         }
 
