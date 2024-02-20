@@ -77,8 +77,9 @@ public class Shape {
 
             JsonObject jsonObject = new JsonObject();
             jsonObject.add("Outer", outerPoints);
-            jsonObject.add("Inner", innerPoints);
-
+            if (shape.inner_points.size() > 0){
+                jsonObject.add("Inner", innerPoints);
+            }
             return jsonObject;
         }
     }

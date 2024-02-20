@@ -57,6 +57,7 @@ public class Util {
     public static Gson gson = new GsonBuilder()
                 .registerTypeAdapter(json.Shape.class, new json.Shape.Serializer())
                 .registerTypeAdapter(json.Point.class, new Point.Serializer())
+                .setPrettyPrinting()
                 .create();
 
     public static void writeInstance(Instance instance, File folder) throws IOException {
