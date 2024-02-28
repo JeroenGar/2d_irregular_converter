@@ -76,9 +76,19 @@ public class Shape {
             JsonElement innerPoints = jsonSerializationContext.serialize(shape.inner_points);
 
             JsonObject jsonObject = new JsonObject();
-            jsonObject.add("Outer", outerPoints);
-            if (shape.inner_points.size() > 0){
-                jsonObject.add("Inner", innerPoints);
+            if(shape.inner_points.size() == 0){
+                //simple polygon shape
+                jsonObject.addProperty("Type", "SimplePolygon");
+                jsonObject.add("Data", outerPoints);
+            }
+            else {
+                //polygon
+                jsonObject.addProperty("Type", "Polygon");
+                JsonObject data = new JsonObject();
+                data.add("Outer", outerPoints);
+                data.add("Inner", innerPoints);
+
+                jsonObject.add("Data", data);
             }
             return jsonObject;
         }
