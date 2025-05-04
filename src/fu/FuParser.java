@@ -23,7 +23,7 @@ public class FuParser {
 
 
     static List<Double> allowedOrientations = Arrays.asList(0.0, 90.0, 180.0, 270.0);
-    static Double stripHeight = 38.0;
+    static Double stripHeight = 38.0 * 1.0001;
 
     public static Instance parseInstance(File file) throws IOException, ParserConfigurationException, SAXException {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
