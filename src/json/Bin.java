@@ -8,28 +8,31 @@ import general.Util;
 import java.util.List;
 
 public class Bin {
-    @SerializedName("Cost")
+    @SerializedName("id")
+    public Integer id;
+    @SerializedName("cost")
     public Integer cost;
-    @SerializedName("Stock")
+    @SerializedName("stock")
     public Integer stock;
-    @SerializedName("Dxf")
+    @SerializedName("dxf")
     public String dxfPath;
 
-    @SerializedName("Zones")
+    @SerializedName("zones")
     public List<Zone> zones;
 
-    @SerializedName("Shape")
+    @SerializedName("shape")
     public Shape shape;
 
 
-    public Bin(Integer cost, Integer stock, List<Zone> zones, Shape shape) {
+    public Bin(Integer id, Integer cost, Integer stock, List<Zone> zones, Shape shape) {
+        this.id = id;
         this.cost = cost;
         this.stock = stock;
         this.zones = zones;
         this.shape = shape;
     }
 
-    public DXFDocument generateDXF(){
+    public DXFDocument generateDXF() {
         DXFDocument dxfDocument = new DXFDocument();
         DXFGraphics dxfGraphics = dxfDocument.getGraphics();
 

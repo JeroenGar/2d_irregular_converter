@@ -7,14 +7,12 @@ import com.jsevy.jdxf.DXFDocument;
 import com.jsevy.jdxf.DXFGraphics;
 import json.Point;
 import json.Shape;
-import json.Zone;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ShapeCleanerMain {
     public static void main(String[] args) throws IOException {
@@ -51,7 +49,6 @@ public class ShapeCleanerMain {
         DXFGraphics dxfGraphics = dxfDocument.getGraphics();
 
         shape.draw(dxfGraphics);
-
 
 
         return dxfDocument;

@@ -16,7 +16,7 @@ public class ShapesMain {
         File outputFolder = new File(parentFolder.getAbsolutePath() + "_converted");
         outputFolder.mkdir();
 
-        File inputFile = new File(parentFolder.getAbsolutePath() + "/shapes0.xml");
+        File inputFile = new File(parentFolder.getAbsolutePath() + "/shapes1.xml");
         Instance instance = ShapesParser.parseInstance(inputFile);
 
         Util.writeInstance(instance, outputFolder);

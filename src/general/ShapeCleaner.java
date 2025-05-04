@@ -33,7 +33,7 @@ public class ShapeCleaner {
                 i++;
             }
         }
-        if (points.size() < original.size()){
+        if (points.size() < original.size()) {
             System.out.println("\t\t" + name + " removed " + (original.size() - points.size()) + " duplicate points");
         }
 
@@ -45,7 +45,7 @@ public class ShapeCleaner {
 
         for (int i = 0; i < lines.size(); i++) {
             for (int j = 0; j < lines.size(); j++) {
-                if (i == j || i == (j + 1) % lines.size() || (i+1) % lines.size() == j) {
+                if (i == j || i == (j + 1) % lines.size() || (i + 1) % lines.size() == j) {
                     //same or adjacent lines
                     continue;
                 } else {
@@ -89,7 +89,7 @@ public class ShapeCleaner {
         }
 
         Set<Integer> falsePositives = new HashSet<>();
-        for (Integer index : pointsToBeReplaced){
+        for (Integer index : pointsToBeReplaced) {
             int indexBefore = index - 1 % original.size();
             int indexAfter = index + 1 % original.size();
 
@@ -114,11 +114,10 @@ public class ShapeCleaner {
                                 Comparator.comparingDouble(p -> Point.distance(p, originalPoint)))
                         .get();
 
-                if(Point.distance(originalPoint, point) < MAX_DISTANCE*10) {
+                if (Point.distance(originalPoint, point) < MAX_DISTANCE * 10) {
                     cleanedPoints.add(point);
                     nSnappedVertices++;
-                }
-                else {
+                } else {
                     cleanedPoints.add(originalPoint);
                     nNotSnappedBecauseTooFar++;
                 }
@@ -205,10 +204,6 @@ public class ShapeCleaner {
             this.j = j;
         }
 
-        public double distanceTo(Point point) {
-            return new Line2D.Double(start.x, start.y, end.x, end.y).ptSegDist(point.x, point.y);
-        }
-
         public static boolean intersects(Line l1, Line l2) {
             Line2D l2D1 = new Line2D.Double(l1.start.x, l1.start.y, l1.end.x, l1.end.y);
             Line2D l2D2 = new Line2D.Double(l2.start.x, l2.start.y, l2.end.x, l2.end.y);
@@ -224,6 +219,10 @@ public class ShapeCleaner {
                 lines.add(line);
             }
             return lines;
+        }
+
+        public double distanceTo(Point point) {
+            return new Line2D.Double(start.x, start.y, end.x, end.y).ptSegDist(point.x, point.y);
         }
     }
 }

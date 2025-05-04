@@ -3,10 +3,10 @@ package json;
 import com.google.gson.annotations.SerializedName;
 
 public class Zone {
-    @SerializedName("Quality")
+    @SerializedName("quality")
     public Integer quality;
 
-    @SerializedName("Shape")
+    @SerializedName("shape")
     public Shape shape;
 
     public Zone(Integer quality, Shape shape) {

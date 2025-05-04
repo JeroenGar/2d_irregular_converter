@@ -3,7 +3,6 @@ package mao;
 import general.Util;
 import json.Instance;
 import org.xml.sax.SAXException;
-import shirts.ShirtsParser;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;

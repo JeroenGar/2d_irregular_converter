@@ -1,6 +1,9 @@
 package albano;
 
-import json.*;
+import json.Instance;
+import json.Item;
+import json.Point;
+import json.Shape;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -61,7 +64,7 @@ public class AlbanoParser {
                     NodeList segments = lines.getChildNodes();
 
                     ArrayList<Point> points = new ArrayList<>();
-                    for(int j = 0; j < segments.getLength(); j++){
+                    for (int j = 0; j < segments.getLength(); j++) {
                         if (segments.item(j).getNodeType() != Node.ELEMENT_NODE) continue;
                         Element segment = (Element) segments.item(j);
                         double x = Double.parseDouble(segment.getAttribute("x0"));
@@ -70,12 +73,12 @@ public class AlbanoParser {
                     }
 
                     Shape shape = new Shape(points, new ArrayList<>());
-                    Item item = new Item(quantity, quantity, null, null, allowedOrientations, null, shape);
+                    Integer id = items.size();
+                    Item item = new Item(id, quantity, null, null, null, allowedOrientations, null, shape);
                     items.add(item);
                 }
             }
         }
-        Strip strip = new Strip(stripHeight);
-        return new Instance(name, items, strip);
+        return new Instance(name, items, stripHeight);
     }
 }

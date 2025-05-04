@@ -14,6 +14,12 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class Util {
+    public static Gson gson = new GsonBuilder()
+            .registerTypeAdapter(json.Shape.class, new json.Shape.Serializer())
+            .registerTypeAdapter(json.Point.class, new Point.Serializer())
+            .setPrettyPrinting()
+            .create();
+
     public static void zipFile(File fileToZip, String fileName, ZipOutputStream zipOut) throws IOException {
         if (fileToZip.isHidden()) {
             return;
@@ -43,26 +49,26 @@ public class Util {
         fis.close();
     }
 
-    public static Color qualityColorMapper(int quality){
-        switch (quality){
-            case 0: return Color.RED;
-            case 1: return Color.ORANGE;
-            case 2: return Color.YELLOW;
-            case 3: return Color.GREEN;
-            case 4: return Color.BLUE;
-            default: throw new RuntimeException("Unsupported quality: " + quality);
+    public static Color qualityColorMapper(int quality) {
+        switch (quality) {
+            case 0:
+                return Color.RED;
+            case 1:
+                return Color.ORANGE;
+            case 2:
+                return Color.YELLOW;
+            case 3:
+                return Color.GREEN;
+            case 4:
+                return Color.BLUE;
+            default:
+                throw new RuntimeException("Unsupported quality: " + quality);
         }
     }
 
-    public static Gson gson = new GsonBuilder()
-                .registerTypeAdapter(json.Shape.class, new json.Shape.Serializer())
-                .registerTypeAdapter(json.Point.class, new Point.Serializer())
-                .setPrettyPrinting()
-                .create();
-
     public static void writeInstance(Instance instance, File folder) throws IOException {
         try {
-            File instanceFile = new File(folder.getAbsolutePath() + "/" + instance.name  + ".json");
+            File instanceFile = new File(folder.getAbsolutePath() + "/" + instance.name + ".json");
             File dxfDirectory = new File(folder.getAbsolutePath() + "/dxf");
             dxfDirectory.mkdir();
             instance.setShapePaths(dxfDirectory.getName());

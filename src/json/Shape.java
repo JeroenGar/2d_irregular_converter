@@ -1,18 +1,15 @@
 package json;
 
-import com.google.gson.*;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonToken;
-import com.google.gson.stream.JsonWriter;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.jsevy.jdxf.DXFGraphics;
-import general.ShapeCleaner;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 public class Shape {
     public ArrayList<Point> outer_points;
@@ -22,7 +19,7 @@ public class Shape {
         this(outer_points, new ArrayList<>());
     }
 
-    public Shape(ArrayList<Point> outer_points, ArrayList<ArrayList<Point>> inner_points){
+    public Shape(ArrayList<Point> outer_points, ArrayList<ArrayList<Point>> inner_points) {
         if (outer_points == null) {
             throw new NullPointerException("outer_points");
         }
@@ -54,13 +51,13 @@ public class Shape {
         return Objects.hash(outer_points, inner_points);
     }
 
-    public void draw(DXFGraphics dxfGraphics){
+    public void draw(DXFGraphics dxfGraphics) {
         dxfGraphics.drawPolyline(
                 outer_points.stream().mapToDouble(p -> p.x).toArray(),
                 outer_points.stream().mapToDouble(p -> p.y).toArray(),
                 outer_points.size());
 
-        for(List<Point> inner_points : inner_points){
+        for (List<Point> inner_points : inner_points) {
             dxfGraphics.drawPolyline(
                     inner_points.stream().mapToDouble(p -> p.x).toArray(),
                     inner_points.stream().mapToDouble(p -> p.y).toArray(),
@@ -76,19 +73,18 @@ public class Shape {
             JsonElement innerPoints = jsonSerializationContext.serialize(shape.inner_points);
 
             JsonObject jsonObject = new JsonObject();
-            if(shape.inner_points.size() == 0){
+            if (shape.inner_points.size() == 0) {
                 //simple polygon shape
-                jsonObject.addProperty("Type", "SimplePolygon");
-                jsonObject.add("Data", outerPoints);
-            }
-            else {
+                jsonObject.addProperty("type", "simple_polygon");
+                jsonObject.add("data", outerPoints);
+            } else {
                 //polygon
-                jsonObject.addProperty("Type", "Polygon");
+                jsonObject.addProperty("type", "polygon");
                 JsonObject data = new JsonObject();
-                data.add("Outer", outerPoints);
-                data.add("Inner", innerPoints);
+                data.add("outer", outerPoints);
+                data.add("inner", innerPoints);
 
-                jsonObject.add("Data", data);
+                jsonObject.add("data", data);
             }
             return jsonObject;
         }

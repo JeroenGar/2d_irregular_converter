@@ -1,20 +1,27 @@
 package json;
 
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.SerializedName;
 
 import java.lang.reflect.Type;
 import java.util.Objects;
 
 public class Point {
-    @SerializedName("X")
+    @SerializedName("x")
     public double x;
-    @SerializedName("Y")
+    @SerializedName("y")
     public double y;
 
     public Point(double x, double y) {
         this.x = x;
         this.y = y;
+    }
+
+    public static double distance(Point p1, Point p2) {
+        return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
     }
 
     @Override
@@ -23,10 +30,6 @@ public class Point {
         if (o == null || getClass() != o.getClass()) return false;
         Point point = (Point) o;
         return Double.compare(point.x, x) == 0 && Double.compare(point.y, y) == 0;
-    }
-
-    public static double distance(Point p1, Point p2){
-        return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
     }
 
     @Override

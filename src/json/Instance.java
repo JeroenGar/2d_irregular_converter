@@ -9,34 +9,36 @@ import java.io.IOException;
 import java.util.List;
 
 public class Instance {
-    @SerializedName("Name")
+    @SerializedName("name")
     public String name;
-    @SerializedName("Items")
+    @SerializedName("items")
     public List<Item> items;
-    @SerializedName("Objects")
+    @SerializedName("bins")
     public List<Bin> bins;
 
-    @SerializedName("Strip")
-    public Strip strip = null;
+    @SerializedName("strip_height")
+    public Double stripHeight;
 
     public Instance(String name, List<Item> items, List<Bin> bins) {
         this.name = name;
         this.items = items;
         this.bins = bins;
+        this.stripHeight = null;
     }
 
-    public Instance(String name, List<Item> items, Strip strip) {
+    public Instance(String name, List<Item> items, Double stripHeight) {
         this.name = name;
         this.items = items;
-        this.strip = strip;
+        this.stripHeight = stripHeight;
+        this.bins = null;
     }
 
-    public void setShapePaths(String folderName){
+    public void setShapePaths(String folderName) {
         for (int i = 0; i < items.size(); i++) {
             Item item = items.get(i);
             item.dxfPath = folderName + "/i_" + i + ".dxf";
         }
-        if (bins != null){
+        if (bins != null) {
             for (int i = 0; i < bins.size(); i++) {
                 Bin bin = bins.get(i);
                 bin.dxfPath = folderName + "/o_" + i + ".dxf";

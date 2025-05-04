@@ -5,50 +5,51 @@ import com.jsevy.jdxf.DXFDocument;
 import com.jsevy.jdxf.DXFGraphics;
 import general.Util;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class Item {
-    @SerializedName("Demand")
+    @SerializedName("id")
+    public Integer id;
+    @SerializedName("demand")
     public Integer demand;
-    @SerializedName("DemandMax")
+    @SerializedName("demand_max")
     public Integer demandMax;
 
-    @SerializedName("Value")
+    @SerializedName("value")
     public Integer value;
-    @SerializedName("Dxf")
+    @SerializedName("dxf")
     public String dxfPath;
 
-    @SerializedName("BaseQuality")
-    public Integer baseQuality;
+    @SerializedName("min_quality")
+    public Integer minQuality;
 
-    @SerializedName("AllowedOrientations")
+    @SerializedName("allowed_orientations")
     public List<Double> allowedOrientations;
 
-    @SerializedName("Zones")
+    @SerializedName("zones")
     public List<Zone> zones;
 
-    @SerializedName("Shape")
+    @SerializedName("shape")
     public Shape shape;
 
-    public Item(Integer demand, Integer demandMax, Integer value, Integer baseQuality, List<Double> allowedOrientations, List<Zone> zones, Shape shape) {
+    public Item(Integer id, Integer demand, Integer demandMax, Integer value, Integer minQuality, List<Double> allowedOrientations, List<Zone> zones, Shape shape) {
+        this.id = id;
         this.demand = demand;
         this.demandMax = demandMax;
         this.value = value;
-        this.baseQuality = baseQuality;
+        this.minQuality = minQuality;
         this.allowedOrientations = allowedOrientations;
         this.shape = shape;
         this.zones = zones;
     }
 
 
-    public DXFDocument generateDXF(){
+    public DXFDocument generateDXF() {
         DXFDocument dxfDocument = new DXFDocument();
         DXFGraphics dxfGraphics = dxfDocument.getGraphics();
 
-        if (this.baseQuality != null){
-            dxfGraphics.setColor(Util.qualityColorMapper(this.baseQuality));
+        if (this.minQuality != null) {
+            dxfGraphics.setColor(Util.qualityColorMapper(this.minQuality));
         }
         shape.draw(dxfGraphics);
 
@@ -66,7 +67,6 @@ public class Item {
 
         return dxfDocument;
     }
-
 
 
 }

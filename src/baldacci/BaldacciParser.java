@@ -1,12 +1,15 @@
 package baldacci;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import general.ShapeCleaner;
 import json.*;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class BaldacciParser {
     public static Instance parseInstance(File file) throws IOException {
@@ -20,7 +23,7 @@ public class BaldacciParser {
             List<Bin> bins = new ArrayList<>();
             for (int i = 0; i < numberOfObjects; i++) {
                 File objectFile = new File(file.getAbsolutePath() + "/" + br.readLine());
-                Bin bin = parseBin(objectFile);
+                Bin bin = parseBin(bins.size(), objectFile);
                 bins.add(bin);
             }
             int numberOfItems = Integer.parseInt(br.readLine().split(" : ")[1]);
@@ -29,12 +32,11 @@ public class BaldacciParser {
                 String line = br.readLine();
                 File itemFile = new File(file.getAbsolutePath() + "/" + line.split(" ")[0]);
                 int itemDemand = Integer.parseInt(line.split(" ")[1]);
-                Item item = parseItem(itemFile, itemDemand);
+                Item item = parseItem(items.size(), itemFile, itemDemand);
                 Optional<Item> optionalEqualShapeItem = items.stream().filter(item1 -> item1.shape.equals(item.shape)).findFirst();
 
                 if (optionalEqualShapeItem.isPresent()) {
                     optionalEqualShapeItem.get().demand += item.demand;
-                    optionalEqualShapeItem.get().demandMax += item.demandMax;
                 } else {
                     items.add(item);
                 }
@@ -50,7 +52,7 @@ public class BaldacciParser {
 
     }
 
-    private static Item parseItem(File file, int demand) throws IOException {
+    private static Item parseItem(Integer id, File file, int demand) throws IOException {
         System.out.println("Parsing item " + file.getName());
         try {
             FileReader fr = new FileReader(file);
@@ -94,8 +96,7 @@ public class BaldacciParser {
                             System.out.println("Quality zone matches the entire shape");
                             quality = defectQuality;
                         }
-                    }
-                    else {
+                    } else {
                         Zone zone = new Zone(defectQuality, defectShape);
                         zones.add(zone);
                     }
@@ -106,7 +107,7 @@ public class BaldacciParser {
             fr.close();
 
             Shape shape = new Shape(points);
-            if (BaldacciMain.CLEAN_SHAPES){
+            if (BaldacciMain.CLEAN_SHAPES) {
                 ShapeCleaner cleaner = new ShapeCleaner();
                 shape = cleaner.clean(shape, file.getName());
                 int i = 0;
@@ -117,7 +118,7 @@ public class BaldacciParser {
                     i++;
                 }
             }
-            return new Item(demand, demand, null, quality, null, zones, shape);
+            return new Item(id, demand, null, null, quality, null, zones, shape);
         } catch (Exception e) {
             System.err.println("Error parsing file: " + file.getAbsolutePath());
             throw e;
@@ -125,7 +126,7 @@ public class BaldacciParser {
     }
 
 
-    private static Bin parseBin(File file) throws IOException {
+    private static Bin parseBin(Integer id, File file) throws IOException {
         System.out.println("Parsing bin: " + file.getName());
         try {
             FileReader fr = new FileReader(file);
@@ -159,8 +160,7 @@ public class BaldacciParser {
                 if (defectType == 0) {
                     //Hole in the bin
                     inner_points.add(defectPoints);
-                }
-                else {
+                } else {
                     //Quality zone
                     Shape defectShape = new Shape(defectPoints);
                     Zone zone = new Zone(defectType, defectShape);
@@ -169,7 +169,7 @@ public class BaldacciParser {
             }
 
             Shape shape = new Shape(outer_points, inner_points);
-            if (BaldacciMain.CLEAN_SHAPES){
+            if (BaldacciMain.CLEAN_SHAPES) {
                 ShapeCleaner cleaner = new ShapeCleaner();
                 shape = cleaner.clean(shape, file.getName());
                 int i = 0;
@@ -181,7 +181,7 @@ public class BaldacciParser {
                 }
             }
 
-            Bin bin = new Bin(1, 1, zones, shape);
+            Bin bin = new Bin(id, 1, 1, zones, shape);
 
             br.close();
             fr.close();

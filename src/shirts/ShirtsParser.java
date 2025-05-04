@@ -1,6 +1,9 @@
 package shirts;
 
-import json.*;
+import json.Instance;
+import json.Item;
+import json.Point;
+import json.Shape;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,7 +11,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 public class ShirtsParser {
@@ -24,7 +26,7 @@ public class ShirtsParser {
         List<Item> items = new ArrayList<>();
 
         while (true) {
-            if (br.readLine() == null){ //PIECE 1
+            if (br.readLine() == null) { //PIECE 1
                 break;
             }
             br.readLine(); //QUANTITY
@@ -42,12 +44,12 @@ public class ShirtsParser {
             }
 
             Shape shape = new Shape(points, new ArrayList<>());
-            Item item = new Item(demand, demand, null, null, allowedOrientations, null, shape);
+            Integer id = items.size();
+            Item item = new Item(id, demand, null, null, null, allowedOrientations, null, shape);
             items.add(item);
 
             br.readLine();
         }
-        Strip strip = new Strip(stripHeight);
-        return new Instance(name, items, strip);
+        return new Instance(name, items, stripHeight);
     }
 }
