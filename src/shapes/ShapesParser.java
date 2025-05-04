@@ -27,7 +27,7 @@ public class ShapesParser {
     //Shapes1
     static List<Double> allowedOrientations = Arrays.asList(0.0, 180.0);
 
-    static Double stripHeight = 40.0;
+    static Double stripHeight = 40.0 * 1.0001;
 
     public static Instance parseInstance(File file) throws IOException, ParserConfigurationException, SAXException {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
